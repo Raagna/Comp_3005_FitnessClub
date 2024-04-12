@@ -1,0 +1,67 @@
+-- Trainers table
+CREATE TABLE Trainers (
+    trainer_id SERIAL PRIMARY KEY,
+    trainer_name CHAR
+);
+
+-- Routines table
+CREATE TABLE Routines (
+    routine_id SERIAL PRIMARY KEY,
+    routine_name CHAR
+);
+
+-- Schedule table
+CREATE TABLE Schedule (
+    schedule_id SERIAL PRIMARY KEY,
+    trainer_id INTEGER REFERENCES Trainers(trainer_id),
+    member_id INTEGER REFERENCES Members(member_id),
+    room_id INTEGER REFERENCES Rooms(room_id),
+    date DATE,
+    time TIME,
+    capacity INTEGER
+);
+
+-- Rooms table
+CREATE TABLE Rooms (
+    room_id SERIAL PRIMARY KEY,
+    room_name CHAR,
+    booking_id INTEGER REFERENCES Bookings(booking_id)
+);
+
+-- Bookings table
+CREATE TABLE Bookings (
+    booking_id SERIAL PRIMARY KEY,
+    booking_name CHAR,
+    member_id INTEGER REFERENCES Members(member_id),
+    trainer_id INTEGER REFERENCES Trainers(trainer_id)
+);
+
+-- Equipments table
+CREATE TABLE Equipments (
+    equipment_id SERIAL PRIMARY KEY,
+    equipment_name CHAR,
+    equipment_status CHAR
+);
+
+-- Admin Staff table
+CREATE TABLE AdminStaff (
+    staff_id SERIAL PRIMARY KEY,
+    staff_name CHAR
+);
+
+-- Members table
+CREATE TABLE Members (
+    member_id SERIAL PRIMARY KEY,
+    member_name CHAR,
+    age INTEGER,
+    membership_status CHAR,
+    height INTEGER,
+    weight INTEGER,
+    fitness_goals CHAR,
+    goal_weight INTEGER,
+    goal_runtime INTEGER,
+    max_deadlift INTEGER,
+    goal_deadlift INTEGER,
+    max_benchPress INTEGER,
+    goal_benchPress INTEGER
+);
