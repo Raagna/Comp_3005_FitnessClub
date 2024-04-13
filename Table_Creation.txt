@@ -1,84 +1,106 @@
--- Table: rooms
-CREATE TABLE rooms (
-    room_id SERIAL PRIMARY KEY,
-    room_name CHAR(255)
-);
 
--- Table: bookings
-CREATE TABLE bookings (
-    booking_id SERIAL PRIMARY KEY,
-    booking_name CHAR(255)
-);
-
--- Table: equipment
-CREATE TABLE equipment (
-    equipment_id SERIAL PRIMARY KEY,
-    equipment_name CHAR(255),
-    equipment_status CHAR(255)
-);
-
--- Table: adminStaff
-CREATE TABLE adminStaff (
-    staff_id SERIAL PRIMARY KEY,
-    username CHAR(255),
-    password CHAR(255),
-    staff_name CHAR(255) NOT NULL
-);
 
 -- Table: trainers
 CREATE TABLE trainers (
     trainer_id SERIAL PRIMARY KEY,
     trainer_name CHAR(255) NOT NULL,
-    username CHAR(255),
-    password CHAR(255)
+    username  CHAR(255),
+    password  CHAR(255)
 );
 
 -- Table: members
 CREATE TABLE members (
     member_id SERIAL PRIMARY KEY,
-    member_name CHAR(255) NOT NULL,
-    username CHAR(255),
-    password CHAR(255),
-    age INT,
+    member_name VARCHAR(255) NOT NULL,
+    username  CHAR(255),
+    password  CHAR(255),
+    age INTEGER,
     membership_status BOOLEAN,
-    height_cm INT,
-    weight_kg INT,
+    height_cm INTEGER,
+    weight_kg INTEGER,
     fitness_goals CHAR(255),
-    goal_weight_kg INT,
-    goal_runtime_sec INT,
-    max_deadlift_kg INT,
-    goal_deadlift_kg INT,
-    max_benchPress_kg INT,
-    goal_benchPress_kg INT
+    goal_weight_kg INTEGER,
+    max_deadlift_kg INTEGER,
+    goal_deadlift_kg INTEGER,
+    max_benchPress_kg INTEGER,
+    goal_benchPress_kg INTEGER
 );
 
 -- Table: routines
 CREATE TABLE routines (
     routine_id SERIAL PRIMARY KEY,
-    routine CHAR(255)
+    routine  CHAR(255)
+);
+
+-- Table: rooms
+CREATE TABLE rooms (
+    room_id SERIAL PRIMARY KEY,
+    room_name  CHAR(255)
+);
+
+-- Table: bookings
+CREATE TABLE bookings (
+    booking_id SERIAL PRIMARY KEY,
+    booking_name  CHAR(255)
+);
+
+-- Table: equipment
+CREATE TABLE equipment (
+    equipment_id SERIAL PRIMARY KEY,
+    equipment_name  CHAR(255),
+    equipment_status  CHAR(255)
+);
+
+-- Table: adminStaff
+CREATE TABLE adminStaff (
+    staff_id PRIMARY KEY,
+    username  CHAR(255),
+    password  CHAR(255),
+    staff_name CHAR(255) NOT NULL
+);
+
+-- Table: equipment_check
+CREATE TABLE equipment_check (
+    staff_id INTEGER REFERENCES adminStaff(staff_id),
+    equipment_id INTEGER REFERENCES equipment(equipment_id),
+    PRIMARY KEY (staff_id, equipment_id)
+);
+
+-- Table: group_classes
+CREATE TABLE group_classes (
+    slot_id INTEGER REFERENCES availability_slots(slot_id),
+    member_id INTEGER REFERENCES members(member_id),
+    PRIMARY KEY (slot_id, member_id)
+);
+
+-- Table: availability_slots
+CREATE TABLE availability_slots (
+    slot_id SERIAL PRIMARY KEY,
+    trainer_id INTEGER REFERENCES trainers(trainer_id),
+    day_of_week INTEGER,
+    start_time TIME,
+    end_time TIME,
+    availability_type CHAR(255)
+);
+
+-- Table: member_routines
+CREATE TABLE member_routines (
+    member_id INTEGER REFERENCES members(member_id),
+    routine_id INTEGER REFERENCES routines(routine_id),
+    PRIMARY KEY (member_id, routine_id)
 );
 
 -- Table: schedule
 CREATE TABLE schedule (
-    trainer_id INT,
-    member_id INT,
-    room_id INT,
-    booking_id INT,
-    staff_id INT,
+    trainer_id INTEGER,
+    member_id INTEGER,
+    room_id INTEGER,
+    booking_id INTEGER,
     date DATE,
     time TIME,
     PRIMARY KEY (trainer_id, member_id, room_id, booking_id),
     FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id),
     FOREIGN KEY (member_id) REFERENCES members(member_id),
     FOREIGN KEY (room_id) REFERENCES rooms(room_id),
-    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id),
-    FOREIGN KEY (staff_id) REFERENCES adminStaff(staff_id)
-);
-
--- Table: equipment_check
-CREATE TABLE equipment_check (
-    staff_id INT,
-    equipment_id INT,
-    FOREIGN KEY (staff_id) REFERENCES adminStaff(staff_id),
-    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
+    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id)
 );
