@@ -28,7 +28,7 @@ CREATE TABLE adminStaff (
 -- Table: trainers
 CREATE TABLE trainers (
     trainer_id SERIAL PRIMARY KEY,
-    trainer_name CHAR(9) NOT NULL,
+    trainer_name CHAR(255) NOT NULL,
     username CHAR,
     password CHAR
 );
