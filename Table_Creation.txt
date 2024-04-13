@@ -38,7 +38,7 @@ CREATE TABLE members (
     member_id SERIAL PRIMARY KEY,
     member_name CHAR(255) NOT NULL,
     username CHAR(255),
-    password INT,
+    password CHAR(255),
     age INT,
     membership_status BOOLEAN,
     height_cm INT,
