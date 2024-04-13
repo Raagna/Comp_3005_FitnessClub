@@ -1,70 +1,84 @@
--- Trainers table
-CREATE TABLE IF NOT EXISTS Trainers (
-    trainer_id SERIAL PRIMARY KEY,
-    trainer_name CHAR NOT NULL
-);
-
--- Routines table
-CREATE TABLE IF NOT EXISTS Routines (
-    routine_id SERIAL PRIMARY KEY,
-    routine_name CHAR NOT NULL
-);
-
--- Schedule table
-CREATE TABLE IF NOT EXISTS Schedule (
-    schedule_id SERIAL PRIMARY KEY,
-    trainer_id INTEGER REFERENCES Trainers(trainer_id),
-    member_id INTEGER REFERENCES Members(member_id),
-    room_id INTEGER REFERENCES Rooms(room_id),
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    capacity INTEGER NOT NULL,
-    CONSTRAINT fk_schedule_trainer FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id),
-    CONSTRAINT fk_schedule_member FOREIGN KEY (member_id) REFERENCES Members(member_id),
-    CONSTRAINT fk_schedule_room FOREIGN KEY (room_id) REFERENCES Rooms(room_id)
-);
-
--- Rooms table
-CREATE TABLE IF NOT EXISTS Rooms (
+-- Table: rooms
+CREATE TABLE rooms (
     room_id SERIAL PRIMARY KEY,
-    room_name CHAR NOT NULL,
-    booking_id INTEGER REFERENCES Bookings(booking_id)
+    room_name CHAR
 );
 
--- Bookings table
-CREATE TABLE IF NOT EXISTS Bookings (
+-- Table: bookings
+CREATE TABLE bookings (
     booking_id SERIAL PRIMARY KEY,
-    booking_name CHAR,
-    member_id INTEGER REFERENCES Members(member_id),
-    trainer_id INTEGER REFERENCES Trainers(trainer_id)
+    booking_name CHAR
 );
 
--- Equipments table
-CREATE TABLE IF NOT EXISTS Equipments (
+-- Table: equipment
+CREATE TABLE equipment (
     equipment_id SERIAL PRIMARY KEY,
-    equipment_name CHAR NOT NULL,
-    equipment_status CHAR NOT NULL
+    equipment_name CHAR,
+    equipment_status CHAR
 );
 
--- Admin Staff table
-CREATE TABLE IF NOT EXISTS AdminStaff (
+-- Table: adminStaff
+CREATE TABLE adminStaff (
     staff_id SERIAL PRIMARY KEY,
-    staff_name CHAR NOT NULL
+    username CHAR,
+    password CHAR,
+    staff_name CHAR(255) NOT NULL
 );
 
--- Members table
-CREATE TABLE IF NOT EXISTS Members (
+-- Table: trainers
+CREATE TABLE trainers (
+    trainer_id SERIAL PRIMARY KEY,
+    trainer_name CHAR(9) NOT NULL,
+    username CHAR,
+    password CHAR
+);
+
+-- Table: members
+CREATE TABLE members (
     member_id SERIAL PRIMARY KEY,
-    member_name CHAR NOT NULL,
-    age INTEGER,
-    membership_status CHAR NOT NULL,
-    height INTEGER,
-    weight INTEGER,
+    member_name CHAR(255) NOT NULL,
+    username CHAR,
+    password INT,
+    age INT,
+    membership_status BOOLEAN,
+    height_cm INT,
+    weight_kg INT,
     fitness_goals CHAR,
-    goal_weight INTEGER,
-    goal_runtime INTEGER,
-    max_deadlift INTEGER,
-    goal_deadlift INTEGER,
-    max_benchPress INTEGER,
-    goal_benchPress INTEGER
+    goal_weight_kg INT,
+    goal_runtime_sec INT,
+    max_deadlift_kg INT,
+    goal_deadlift_kg INT,
+    max_benchPress_kg INT,
+    goal_benchPress_kg INT
+);
+
+-- Table: routines
+CREATE TABLE routines (
+    routine_id SERIAL PRIMARY KEY,
+    routine CHAR
+);
+
+-- Table: schedule
+CREATE TABLE schedule (
+    trainer_id INT,
+    member_id INT,
+    room_id INT,
+    booking_id INT,
+    staff_id INT,
+    date DATE,
+    time TIME,
+    PRIMARY KEY (trainer_id, member_id, room_id, booking_id),
+    FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id),
+    FOREIGN KEY (member_id) REFERENCES members(member_id),
+    FOREIGN KEY (room_id) REFERENCES rooms(room_id),
+    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id),
+    FOREIGN KEY (staff_id) REFERENCES adminStaff(staff_id)
+);
+
+-- Table: equipment_check
+CREATE TABLE equipment_check (
+    staff_id INT,
+    equipment_id INT,
+    FOREIGN KEY (staff_id) REFERENCES adminStaff(staff_id),
+    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
 );
