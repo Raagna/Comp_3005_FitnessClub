@@ -1,5 +1,6 @@
 
 import psycopg2
+import trainer
 
 # Database connection parameters
 DB_NAME = "Comp3005_finalProject"
@@ -152,18 +153,14 @@ def schedule_session(member_id):
 # Trainer Functions
 def set_trainer_availability():
     try:
-        print("Trainer Schedule Management:")
+        print("#####Trainer Schedule Management######")
         trainer_id = int(input("Enter trainer ID: "))
-        date = input("Enter date (YYYY-MM-DD): ")
+        day_of_week = input("Enter day of week: ")
         start_time = input("Enter start time (HH:MM): ")
         end_time = input("Enter end time (HH:MM): ")
         
         conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO trainer_availability (trainer_id, date, start_time, end_time) VALUES (%s, %s, %s, %s)", (trainer_id, date, start_time, end_time))
-        conn.commit()
-        cursor.close()
-        conn.close()
+        trainer.set_trainer_availability(conn, trainer_id, day_of_week, start_time, end_time)
         
         print("Trainer availability set successfully")
     except Exception as e:
@@ -174,15 +171,8 @@ def search_member_profile():
         member_name = input("Enter member's name: ")
         
         conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM members WHERE member_name LIKE %s", ('%' + member_name + '%',))
-        member_profiles = cursor.fetchall()
-        cursor.close()
-        conn.close()
+        trainer.search_members_by_name(conn, member_name)
         
-        print("Member Profiles:")
-        for profile in member_profiles:
-            print(profile)
     except Exception as e:
         print("Error:", e)
         

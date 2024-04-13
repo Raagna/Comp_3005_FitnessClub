@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-def add_slots_for_trainer(conn, trainer_id, day_of_week, start_time, end_time, session_length):
+def set_trainer_availability(conn, trainer_id, day_of_week, start_time, end_time, session_length):
     # Calculate the number of slots based on session length
     start_time_obj = datetime.strptime(start_time, "%H:%M")
     end_time_obj = datetime.strptime(end_time, "%H:%M")
