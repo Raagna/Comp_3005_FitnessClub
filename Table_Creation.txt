@@ -77,7 +77,7 @@ CREATE TABLE group_classes (
 CREATE TABLE availability_slots (
     slot_id SERIAL PRIMARY KEY,
     trainer_id INTEGER REFERENCES trainers(trainer_id),
-    day_of_week INTEGER,
+    day_of_week CHAR(255),
     start_time TIME,
     end_time TIME,
     availability_type CHAR(255)
