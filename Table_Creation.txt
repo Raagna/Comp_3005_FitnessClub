@@ -1,27 +1,27 @@
 -- Table: rooms
 CREATE TABLE rooms (
     room_id SERIAL PRIMARY KEY,
-    room_name CHAR
+    room_name CHAR(255)
 );
 
 -- Table: bookings
 CREATE TABLE bookings (
     booking_id SERIAL PRIMARY KEY,
-    booking_name CHAR
+    booking_name CHAR(255)
 );
 
 -- Table: equipment
 CREATE TABLE equipment (
     equipment_id SERIAL PRIMARY KEY,
-    equipment_name CHAR,
-    equipment_status CHAR
+    equipment_name CHAR(255),
+    equipment_status CHAR(255)
 );
 
 -- Table: adminStaff
 CREATE TABLE adminStaff (
     staff_id SERIAL PRIMARY KEY,
-    username CHAR,
-    password CHAR,
+    username CHAR(255),
+    password CHAR(255),
     staff_name CHAR(255) NOT NULL
 );
 
@@ -29,21 +29,21 @@ CREATE TABLE adminStaff (
 CREATE TABLE trainers (
     trainer_id SERIAL PRIMARY KEY,
     trainer_name CHAR(255) NOT NULL,
-    username CHAR,
-    password CHAR
+    username CHAR(255),
+    password CHAR(255)
 );
 
 -- Table: members
 CREATE TABLE members (
     member_id SERIAL PRIMARY KEY,
     member_name CHAR(255) NOT NULL,
-    username CHAR,
+    username CHAR(255),
     password INT,
     age INT,
     membership_status BOOLEAN,
     height_cm INT,
     weight_kg INT,
-    fitness_goals CHAR,
+    fitness_goals CHAR(255),
     goal_weight_kg INT,
     goal_runtime_sec INT,
     max_deadlift_kg INT,
@@ -55,7 +55,7 @@ CREATE TABLE members (
 -- Table: routines
 CREATE TABLE routines (
     routine_id SERIAL PRIMARY KEY,
-    routine CHAR
+    routine CHAR(255)
 );
 
 -- Table: schedule
