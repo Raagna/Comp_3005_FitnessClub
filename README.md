@@ -1,5 +1,5 @@
 # Comp_3005_FitnessClub
-Youtube video: 
+Youtube video: https://youtu.be/9nrkYMNrw50
 
 Report:
 ER Diagram:
