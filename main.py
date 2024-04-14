@@ -2,6 +2,7 @@
 import psycopg2
 import trainer
 import admin
+import members
 
 # Database connection parameters
 DB_NAME = "Comp3005_finalProject"
@@ -181,7 +182,7 @@ def search_member_profile():
 
 def manage_room_bookings():
     conn = get_db_connection()
-    admin.equipment_maintenance(conn)
+    admin.room_booking_management(conn)
 
 def manage_equipment():
     conn = get_db_connection()
@@ -306,16 +307,16 @@ def main():
                 if choice == 1:
                     user = input("Enter member username: ")
                     password = input("Enter member password: ")
-                    member_id = get_member_id(user,password)
+                    member_id = members.get_member_id(user,password)
                     if member_id is None:
                         while member_id is None:
                             print("Incorrect Username or password!")
                             user = input("Enter member Username: ")
                             password = input("Enter member Password: ")
-                            member_id = get_member_id(user,password)
+                            member_id = members.get_member_id(user,password)
                 else: 
-                    register_user()
-                    member_id = get_most_recent_member_id();
+                    members.register_user()
+                    member_id = members.get_most_recent_member_id();
                     
                 print("\nMember Functions:")
                 print("1. Profile Management")
@@ -323,11 +324,25 @@ def main():
                 print("3. Schedule Management")
                 choice = int(input("Enter your choice: "))
                 if choice == 1:
-                    update_profile(member_id)
+                    members.update_profile(member_id)
                 elif choice == 2:
-                    display_dashboard(member_id)
+                    members.display_dashboard(member_id)
                 elif choice == 3:
-                    schedule_session(member_id)        
+                    members.schedule_session(member_id)        
+                else:
+                    print("Invalid choice. Please try again.")
+                    
+                print("\nMember Functions:")
+                print("1. Profile Management")
+                print("2. Dashboard Display")
+                print("3. Schedule Management")
+                choice = int(input("Enter your choice: "))
+                if choice == 1:
+                    members.update_profile(member_id)
+                elif choice == 2:
+                    members.display_dashboard(member_id)
+                elif choice == 3:
+                    members.schedule_session(member_id)        
                 else:
                     print("Invalid choice. Please try again.")
 

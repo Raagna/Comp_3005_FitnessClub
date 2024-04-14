@@ -124,10 +124,10 @@ def display_dashboard(member_id):
         choice = input('Would you like to add exercises? (y/n): ')
         if choice.upper() == 'Y' or choice.upper() == 'YES':
             new_exercise = input("Add exercise (type 'quit' to stop): ")
-            add_exercise(new_exercise,member_id)
             while new_exercise.upper() != 'QUIT':
-                new_exercise = input("Add exercise (type 'quit' to stop): ")
                 add_exercise(new_exercise,member_id)
+                new_exercise = input("Add exercise (type 'quit' to stop): ")
+                
         cursor.close()
         conn.close()
     except Exception as e:
@@ -178,7 +178,7 @@ def book_session(member_id):
     slot_id = available_slots[0][0]  # Assuming the first available slot is booked
     cursor.execute("INSERT INTO session_members (slot_id, member_id) VALUES (%s, %s)", (slot_id, member_id))
     conn.commit()
-    print("Individual session successfully booked!")
+    print("Individual session successfully booked! Successfully paid $30")
         
 def schedule_session(member_id):
     try:
