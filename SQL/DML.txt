@@ -52,9 +52,9 @@ VALUES (1, 1),
        (2, 2);
 
 -- Insert data into the bill_payment table
-INSERT INTO bill_payment (member_id, staff_id, payment, payment_name)
-VALUES (1, 1, '50.00', 'Membership Fee'),
-       (2, 2, '75.00', 'Training Session');
+INSERT INTO bill_payment (member_id, payment, payment_name)
+VALUES (1, '50.00', 'Membership Fee'),
+       (2, '75.00', 'Training Session');
 
 -- Insert data into the schedule table
 INSERT INTO schedule (slot_id, room_id)
