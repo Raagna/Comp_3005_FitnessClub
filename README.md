@@ -3,4 +3,5 @@ Youtube video:
 
 Report:
 ER Diagrams:
-[Untitled document (7).pdf](https://github.com/Raagna/Comp_3005_FitnessClub/files/14969341/Untitled.document.7.pdf)
+![image](https://github.com/Raagna/Comp_3005_FitnessClub/assets/68925066/671afbf1-4d6a-4c76-a9ed-597a246cab41)
+
