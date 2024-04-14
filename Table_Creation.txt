@@ -80,10 +80,10 @@ CREATE TABLE session_members (
 
 -- Table: bill_payment
 CREATE TABLE bill_payment (
+	payment_id SERIAL PRIMARY KEY,
     member_id INTEGER REFERENCES members(member_id),
     payment VARCHAR(255),
-    payment_name VARCHAR(255),
-    PRIMARY KEY (member_id, staff_id)
+    payment_name VARCHAR(255)
 );
 
 -- Table: member_routines
