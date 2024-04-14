@@ -83,7 +83,7 @@ CREATE TABLE bill_payment (
     member_id INTEGER REFERENCES members(member_id),
     payment VARCHAR(255),
     payment_name VARCHAR(255),
-    PRIMARY KEY (member_id, staff_id)
+    PRIMARY KEY (member_id)
 );
 
 -- Table: member_routines
