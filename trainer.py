@@ -30,12 +30,16 @@ def set_trainer_availability(conn, trainer_id, day_of_week, start_time, end_time
     cursor.close()
     conn.close()
 
+
 def search_members_by_name(conn, member_name):
     cursor = conn.cursor()
 
     # Search for members by name
-    cursor.execute("SELECT member_id, member_name FROM members WHERE member_name ILIKE %s", ('%' + member_name + '%',))
-    members = cursor.fetchall()
+    cursor.execute("SELECT member_id, member_name FROM members WHERE member_name IS %s", ('%' + member_name + '%',))
+    members = cursor.fetchonce()
+
+    if(members[0] is None):
+        print("No members of that name. ")
 
     # Print or return the search results
     for member_id, member_name in members:

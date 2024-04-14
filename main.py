@@ -1,6 +1,7 @@
 
 import psycopg2
 import trainer
+import admin
 
 # Database connection parameters
 DB_NAME = "Comp3005_finalProject"
@@ -172,11 +173,22 @@ def search_member_profile():
         
         conn = get_db_connection()
         trainer.search_members_by_name(conn, member_name)
-        
+
     except Exception as e:
         print("Error:", e)
         
-        
+#Admin functions
+
+def manage_room_bookings():
+    conn = get_db_connection()
+    admin.equipment_maintenance(conn)
+
+def manage_equipment():
+    conn = get_db_connection()
+    admin.equipment_maintenance(conn)
+    
+
+
 def get_member_id(username, password):
     try:
         conn = get_db_connection()
@@ -195,6 +207,43 @@ def get_member_id(username, password):
             cursor.close()
             conn.close()
             
+        
+def get_trainer_id(username, password):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT member_id FROM trainers WHERE username = %s AND password = %s", (username, password))
+        result = cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
+    except (Exception, psycopg2.Error) as error:
+        print("Error:", error)
+        return None
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+                        
+        
+def get_admin_id(username, password):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT member_id FROM adminStaff WHERE username = %s AND password = %s", (username, password))
+        result = cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
+    except (Exception, psycopg2.Error) as error:
+        print("Error:", error)
+        return None
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
             
             
 def get_user(user):
@@ -248,7 +297,8 @@ def main():
             print("\nSelect User Type:")
             print("1. Member")
             print("2. Trainer")
-            print("3. Exit")
+            print("3. Admin")
+            print("4. Exit")
             user_type = int(input("Enter your choice: "))
 
             if user_type == 1:
@@ -282,22 +332,61 @@ def main():
                     print("Invalid choice. Please try again.")
 
             elif user_type == 2:
-                print("\nTrainer Functions:")
-                print("1. Set Trainer Availability")
-                print("2. Search Member Profile")
-                choice = int(input("Enter your choice: "))
-                if choice == 1:
-                    set_trainer_availability()
-                elif choice == 2:
-                    search_member_profile()
+                print("Please log in.")
+                username = input("Username:" )
+                password = input("Password:" )
+                trainer_id = get_trainer_id(username, password)
+                if trainer_id is None:
+                        while trainer_id is None:
+                            print("Incorrect Username or password!")
+                            user = input("Enter trainer Username: ")
+                            password = input("Enter trainer Password: ")
+                            admin_id = get_admin_id(user,password)
                 else:
-                    print("Invalid choice. Please try again.")
+                    print("\nTrainer Functions:")
+                    print("1. Set Trainer Availability")
+                    print("2. Search Member Profile")
+                    choice = int(input("Enter your choice: "))
+                    if choice == 1:
+                        set_trainer_availability()
+                    elif choice == 2:
+                        search_member_profile()
+                    else:
+                        print("Invalid choice. Please try again.")
 
             elif user_type == 3:
-                break
+                print("Please log in.")
+                username = input("Username:" )
+                password = input("Password:" )
+                admin_id = get_admin_id(username, password)
+                if admin_id is None:
+                        while admin_id is None:
+                            print("Incorrect Username or password!")
+                            user = input("Enter member Username: ")
+                            password = input("Enter member Password: ")
+                            admin_id = get_admin_id(user,password)
+                else:
+                    print("Welcome to the Admin CLI!")
+                    print("1. Equipment Maintenance Monitoring")
+                    print("2. Room Booking Management")
+                    print("3. Exit")
 
+                    choice = input("Enter your choice (1 or 2): ")
+
+                    if choice == "1":
+                        # Equipment Maintenance Monitoring
+                        manage_equipment()
+
+
+                    elif choice == "2":
+                        # Room Booking Management
+                        manage_room_bookings()
+            elif user_type==4:
+                print("Goodbye!")
+                break
             else:
                 print("Invalid choice. Please try again.")
+
     except Exception as e:
         print("Error:", e)
 
