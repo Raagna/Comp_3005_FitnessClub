@@ -185,29 +185,21 @@ def schedule_session(member_id):
         conn = get_db_connection()
         cursor = conn.cursor()
         # Check if the member has any existing sessions booked
-        cursor.execute("SELECT slot_id FROM session_members WHERE member_id = %s", (member_id,))
-        existing_sessions = cursor.fetchall()
+        # cursor.execute("SELECT slot_id FROM session_members WHERE member_id = %s", (member_id,))
+        # existing_sessions = cursor.fetchall()
         
-        if existing_sessions:
-            choice = input("Would you like to reschedule or cancel your existing session? or book another session? (reschedule/cancel/book): ")
+        # if existing_sessions:
+        #     choice = input("Would you like to reschedule or cancel your existing session? or book another session? (reschedule/cancel/book): ")
             
-            if choice.lower() == "reschedule":
-                # Reschedule session
-                reschedule_session(member_id)
-                return
-            elif choice.lower() == "cancel":
-                # Cancel session
-                cancel_session(member_id)
-                return
-            elif choice.lower() == "book":
-                # book session
-                book_session(member_id)
-                return
-            else:
-                print("Invalid choice.")
-                return
-        else:
-            book_session(member_id)
+        #     if choice.lower() == "reschedule":
+        #         # Reschedule session
+        #         reschedule_session(member_id)
+        #         return
+        #     elif choice.lower() == "cancel":
+        #         # Cancel session
+        #         cancel_session(member_id)
+        #         return
+        book_session(member_id)
     except psycopg2.Error as e:
         print("Error booking individual session:", e)
 
@@ -216,107 +208,105 @@ def schedule_session(member_id):
             conn.close()  
         
         
-def reschedule_session(member_id):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
+# def reschedule_session(member_id):
+#     try:
+#         conn = get_db_connection()
+#         cursor = conn.cursor()
         
-         # Prompt for session details
-        trainer_name = input("Enter current trainer name: ")
-        session_date = input("Enter current session day: ")
-        session_time_str = input("Enter current session time (HH:MM): ")
-        session_time = datetime.strptime(session_time_str, "%H:%M").time()
+#          # Prompt for session details
+#         trainer_name = input("Enter current trainer name: ")
+#         session_date = input("Enter current session day: ")
+#         session_time_str = input("Enter current session time (HH:MM): ")
+#         session_time = datetime.strptime(session_time_str, "%H:%M").time()
         
-        # Find session based on provided details
-        cursor.execute("""
-            SELECT av.slot_id
-            FROM session_members sm
-            JOIN availability_slots av ON sm.slot_id = av.slot_id
-            JOIN trainers t ON av.trainer_id = t.trainer_id
-            WHERE sm.member_id = %s
-            AND t.trainer_name = %s
-            AND av.day_of_week = %s
-            AND av.start_time = %s
-            AND av.end_time = %s
-            """, (member_id, trainer_name, session_date, session_time, session_time))
-        session = cursor.fetchone()
+#         # Find session based on provided details
+#         cursor.execute("""
+#             SELECT sm.slot_id
+#             FROM session_members sm
+#             JOIN availability_slots av ON sm.slot_id = av.slot_id
+#             JOIN trainers t ON av.trainer_id = t.trainer_id
+#             WHERE t.trainer_name = :trainer_name
+#             AND av.day_of_week = :session_date
+#             AND av.start_time = :session_time;
+#             """, (member_id, trainer_name, session_date, session_time))
+#         session = cursor.fetchone()
         
-        if not session:
-            print("Session not found. Please check your input.")
-            return
+#         if not session:
+#             print("Session not found. Please check your input.")
+#             return
         
-        new_trainer_name = input("Enter new trainer name: ")
-        new_session_date = input("Enter new session day: ")
-        new_session_time_str = input("Enter new session time (HH:MM): ")
-        new_session_time = datetime.strptime(new_session_time_str, "%H:%M").time()
+#         new_trainer_name = input("Enter new trainer name: ")
+#         new_session_date = input("Enter new session day: ")
+#         new_session_time_str = input("Enter new session time (HH:MM): ")
+#         new_session_time = datetime.strptime(new_session_time_str, "%H:%M").time()
         
-        # Check if the new slot is available
-        cursor.execute("""
-            SELECT availability_slots.slot_id 
-            FROM availability_slots 
-            JOIN trainers ON availability_slots.trainer_id = trainers.trainer_id 
-            WHERE trainers.trainer_name = %s 
-            AND day_of_week = %s 
-            AND start_time <= %s 
-            AND end_time >= %s
-            """, (new_trainer_name, new_session_date.strftime("%A"), new_session_time, new_session_time))
+#         # Check if the new slot is available
+#         cursor.execute("""
+#             SELECT availability_slots.slot_id 
+#             FROM availability_slots 
+#             JOIN trainers ON availability_slots.trainer_id = trainers.trainer_id 
+#             WHERE trainers.trainer_name = %s 
+#             AND day_of_week = %s 
+#             AND start_time <= %s 
+#             AND end_time >= %s
+#             """, (new_trainer_name, new_session_date.strftime("%A"), new_session_time, new_session_time))
        
-        new_session = cursor.fetchone()
-        if new_session:
-            print("Trainer is not available at the specified time and date.")
-            return
+#         new_session = cursor.fetchone()
+#         if new_session:
+#             print("Trainer is not available at the specified time and date.")
+#             return
 
-        # Update the session details for the member
-        cursor.execute("""
-            UPDATE session_members 
-            SET slot_id = %s, date = %s, time = %s
-            WHERE member_id = %s AND date = %s AND time = %s
-            """, (new_session[0], new_session_date, new_session_time, member_id, session_date, session_time))
-        conn.commit()
-        print("Session successfully rescheduled.")
+#         # Update the session details for the member
+#         cursor.execute("""
+#             UPDATE session_members 
+#             SET slot_id = %s, date = %s, time = %s
+#             WHERE member_id = %s AND date = %s AND time = %s
+#             """, (new_session[0], new_session_date, new_session_time, member_id, session_date, session_time))
+#         conn.commit()
+#         print("Session successfully rescheduled.")
 
-    except psycopg2.Error as e:
-        print("Error rescheduling session:", e)
+#     except psycopg2.Error as e:
+#         print("Error rescheduling session:", e)
 
-    finally:
-        if conn:
-            conn.close()
+#     finally:
+#         if conn:
+#             conn.close()
 
         
         
         
-def cancel_session(member_id):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
+# def cancel_session(member_id):
+#     try:
+#         conn = get_db_connection()
+#         cursor = conn.cursor()
 
-        # Prompt for session details to cancel
-        session_date = input("Enter the session day to cancel: ")
-        session_time_str = input("Enter the session time to cancel (HH:MM): ")
-        session_time = datetime.strptime(session_time_str, "%H:%M").time()
+#         # Prompt for session details to cancel
+#         session_date = input("Enter the session day to cancel: ")
+#         session_time_str = input("Enter the session time to cancel (HH:MM): ")
+#         session_time = datetime.strptime(session_time_str, "%H:%M").time()
 
-      # Check if the session exists for the member
-        cursor.execute("""
-            DELETE FROM session_members 
-            WHERE member_id = %s 
-            AND slot_id IN (
-                SELECT slot_id 
-                FROM session_members 
-                JOIN availability_slots ON availability_slots.slot_id = session_members.slot_id
-                WHERE member_id = %s 
-                AND date = %s 
-                AND start_time = %s
-            )
-            """, (member_id, member_id, session_date, session_time))
-        conn.commit()
-        print("Session successfully canceled.")
+#       # Check if the session exists for the member
+#         cursor.execute("""
+#             DELETE FROM session_members 
+#             WHERE member_id = %s 
+#             AND slot_id IN (
+#                 SELECT slot_id 
+#                 FROM session_members 
+#                 JOIN availability_slots ON availability_slots.slot_id = session_members.slot_id
+#                 WHERE member_id = %s 
+#                 AND date = %s 
+#                 AND start_time = %s
+#             )
+#             """, (member_id, member_id, session_date, session_time))
+#         conn.commit()
+#         print("Session successfully canceled.")
 
-    except psycopg2.Error as e:
-        print("Error canceling session:", e)
+#     except psycopg2.Error as e:
+#         print("Error canceling session:", e)
 
-    finally:
-        if conn:
-            conn.close() 
+#     finally:
+#         if conn:
+#             conn.close() 
             
             
             
